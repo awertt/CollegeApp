@@ -27,6 +27,8 @@ public class ApplicantActivity extends ActionBarActivity {
     private CharSequence mTitle;
     private ListView mDrawerList;
 
+    //Github commit example :)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
