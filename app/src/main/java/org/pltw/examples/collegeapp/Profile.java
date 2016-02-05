@@ -28,11 +28,13 @@ public class Profile implements ApplicantData {
     private static final String JSON_LAST_NAME = "lastName";
     private static final String JSON_DOB = "dob";
     private static final String JSON_GPA = "gpa";
+    private static final String JSON_ACT = "act";
 
     public Profile(JSONObject json) throws JSONException {
         mFirstName = json.getString(JSON_FIRST_NAME);
         mLastName = json.getString(JSON_LAST_NAME);
         mGPA = json.getString(JSON_GPA);
+        mACT = json.getString(JSON_ACT);
         mDateOfBirth = new Date(json.getLong(JSON_DOB));
     }
 
@@ -51,6 +53,7 @@ public class Profile implements ApplicantData {
     public void setACT(String ACT) {
         mACT = ACT;
     }
+
     public String getSchoolGPA() {
         return mSchoolGPA;
     }

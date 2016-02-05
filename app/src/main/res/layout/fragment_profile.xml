@@ -77,7 +77,8 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/enter_school_act"/>
+            android:id="@+id/enter_school_act"
+            android:text="@string/school_act"/>
 
 
         <TextView

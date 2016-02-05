@@ -30,6 +30,8 @@ public class ProfileFragment extends Fragment{
     private static final String KEY_FIRST_NAME = "firstname";
     private static final String FILENAME = "profile.json";
 
+    private boolean accepted1 = false;
+    private boolean accepted = false;
     private Profile mProfile;
     private TextView mFirstName;
     private EditText mEnterFirstName;
@@ -39,10 +41,10 @@ public class ProfileFragment extends Fragment{
     private EditText mEnterGPA;
     private TextView mSchoolGPA;
     private EditText mEnterSchoolGPA;
-    //private TextView mACT;
-    // private EditText mEnterACT;
-    //private TextView mSchoolACT;
-    //private EditText mEnterSchoolACT;
+    private TextView mACT;
+    private EditText mEnterACT;
+    private TextView mSchoolACT;
+    private EditText mEnterSchoolACT;
     private TextView mAccepted;
     private Button mDoBButton;
     private Context mAppContext;
@@ -104,10 +106,10 @@ public class ProfileFragment extends Fragment{
         mEnterGPA = (EditText)rootView.findViewById(R.id.enter_gpa);
         mSchoolGPA = (TextView)rootView.findViewById(R.id.school_gpa);
         mEnterSchoolGPA = (EditText)rootView.findViewById(R.id.enter_school_gpa);
-        //mACT = (TextView)rootView.findViewById(R.id.act);
-        //mEnterACT = (EditText)rootView.findViewById(R.id.enter_act);
-        //mSchoolACT = (TextView)rootView.findViewById(R.id.school_act);
-        //mEnterSchoolACT = (EditText)rootView.findViewById(R.id.enter_school_act);
+        mACT = (TextView)rootView.findViewById(R.id.act);
+        mEnterACT = (EditText)rootView.findViewById(R.id.enter_act);
+        mSchoolACT = (TextView)rootView.findViewById(R.id.school_act);
+        mEnterSchoolACT = (EditText)rootView.findViewById(R.id.enter_school_act);
 
         mAccepted = (TextView)rootView.findViewById(R.id.accepted);
 
@@ -115,9 +117,8 @@ public class ProfileFragment extends Fragment{
         mLastName.setText(mProfile.getLastName());
         mGPA.setText(mProfile.getGPA());
         mSchoolGPA.setText("School's required GPA:");
-        //mACT.setText(mProfile.getACT());
-        ///mSchoolACT.setText("School's required ACT score:");
-        //mCheck.setText("Check Eligibility");
+        mACT.setText(mProfile.getACT());
+        mSchoolACT.setText("School's required ACT score:");
 
         FirstNameTextChanger firstNameTextChanger = new FirstNameTextChanger();
         LastNameTextChanger lastNameTextChanger = new LastNameTextChanger();
@@ -125,8 +126,8 @@ public class ProfileFragment extends Fragment{
         GPATextChanger gpaTextChanger = new GPATextChanger();
         SchoolGPATextChanger schoolGPATextChanger = new SchoolGPATextChanger();
 
-        //ACTTextChanger actTextChanger = new ACTTextChanger();
-        //SchoolACTTextChanger schoolACTTextChanger = new SchoolACTTextChanger();
+        ACTTextChanger actTextChanger = new ACTTextChanger();
+        SchoolACTTextChanger schoolACTTextChanger = new SchoolACTTextChanger();
 
         DoBButtonOnClickListener doBButtonOnClickListener = new DoBButtonOnClickListener();
 
@@ -141,9 +142,9 @@ public class ProfileFragment extends Fragment{
 
         mEnterSchoolGPA.addTextChangedListener(schoolGPATextChanger);
 
-        //mEnterACT.addTextChangedListener(actTextChanger);
+        mEnterACT.addTextChangedListener(actTextChanger);
 
-        //mEnterSchoolACT.addTextChangedListener(schoolACTTextChanger);
+        mEnterSchoolACT.addTextChangedListener(schoolACTTextChanger);
 
         mAppContext = this.getActivity();
         Log.d(TAG, "Context: " + mAppContext);
@@ -227,37 +228,29 @@ public class ProfileFragment extends Fragment{
                 String gpa = mProfile.getGPA();
                 String schoolGPA = mProfile.getSchoolGPA();
                 if (Profile.compareFloat(gpa,schoolGPA)) {
-                    mEnterSchoolGPA.setText("School's required GPA:");
-                    mAccepted.setText("Student meets requirements");
-                    mAccepted.setTextColor(Color.GREEN);
+                    mSchoolGPA.setText("School's required GPA:");
+                    //mAccepted.setText("Student meets requirements");
+                    //mAccepted.setTextColor(Color.GREEN);
+                    accepted = true;
                 } else {
-                    mAccepted.setText("Student does not meet requirements");
-                    mAccepted.setTextColor(Color.RED);
+                    //mAccepted.setText("Student does not meet requirements");
+                    //mAccepted.setTextColor(Color.RED);
+                    accepted = false;
                 }
             } catch (IllegalArgumentException i) {
                 Log.e(TAG, i.getMessage());
             }
+            if (accepted && accepted1) {
+                mAccepted.setText("Meets school requirements");
+                mAccepted.setTextColor(Color.GREEN);
+            } else {
+                mAccepted.setText("Does not meet school requirements");
+                mAccepted.setTextColor(Color.RED);
+            }
         }
     }
-    /*try {
-    String gpa = mProfile.getGPA();
-    String schoolGPA = mProfile.getSchoolGPA();
-    String act = mProfile.getACT();
-    String schoolACT = mProfile.getSchoolACT();
-    if (Profile.compareFloat(act, schoolACT) && Profile.compareFloat(gpa, schoolGPA)) {
-        mSchoolGPA.setText("School's required GPA:");
-        mAccepted.setText("Student meets requirements");
-        mAccepted.setTextColor(Color.GREEN);
-    }
-    else {
-        mAccepted.setText("Student does not meet requirements");
-        mAccepted.setTextColor(Color.RED);
-    }
-    } catch (IllegalArgumentException i) {
-                Log.e(TAG, i.getMessage());
-    }
-    }*/
-    /*private class ACTTextChanger implements TextWatcher {
+
+    private class ACTTextChanger implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -287,9 +280,33 @@ public class ProfileFragment extends Fragment{
 
         @Override
         public void afterTextChanged(Editable s) {
-            mSchoolACT.setText(mProfile.getSchoolACT());
+            //mSchoolGPA.setText(mProfile.getSchoolGPA());
+            try {
+                String act = mProfile.getACT();
+                String schoolACT = mProfile.getSchoolACT();
+
+                if (Profile.compareFloat(act,schoolACT)) {
+                    mSchoolACT.setText("School's required ACT:");
+                    //mAccepted.setText("Student meets requirements");
+                    //mAccepted.setTextColor(Color.GREEN);
+                    accepted1 = true;
+                } else {
+                    //mAccepted.setText("Student does not meet requirements");
+                    //mAccepted.setTextColor(Color.RED);
+                    accepted1 = false;
+                }
+            } catch (IllegalArgumentException i) {
+                Log.e(TAG, i.getMessage());
+            }
+            if (accepted && accepted1) {
+                mAccepted.setText("Meets school requirements");
+                mAccepted.setTextColor(Color.GREEN);
+            } else {
+                mAccepted.setText("Does not meet school requirements");
+                mAccepted.setTextColor(Color.RED);
+            }
         }
-    }*/
+    }
 
     private class DoBButtonOnClickListener implements View.OnClickListener {
         public void onClick(View v) {
@@ -335,6 +352,9 @@ public class ProfileFragment extends Fragment{
             Log.d(TAG, "Loaded " + mProfile.getFirstName());
             mFirstName.setText(mProfile.getFirstName());
             mLastName.setText(mProfile.getLastName());
+            mGPA.setText(mProfile.getGPA());
+            mACT.setText(mProfile.getACT());
+
             updateDoB();
         } catch (Exception e) {
             mProfile = new Profile();
